@@ -36,3 +36,5 @@ Usage and Redistribution
 Use and redistribution of the codes in this repository are allowed, provided that you cite the following paper:
 
 Babak M. S. Arani, Stephen R. Carpenter, Egbert H. van Nes, Reconstructing Langevin Systems from High and Low-Resolution Time Series using Euler and Hermite Reconstructions.
+
+[![DOI](https://zenodo.org/badge/805855376.svg)](https://zenodo.org/doi/10.5281/zenodo.11319356)
