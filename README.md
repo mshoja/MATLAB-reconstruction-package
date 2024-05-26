@@ -1,6 +1,6 @@
 This repository contains a MATLAB package called the MATLAB Reconstruction Package. This package implements a maximum-likelihood estimation procedure to fit the following stochastic Langevin systems to univariate time series data with different resolutions (this process is known as 'system reconstruction'):
 
-dx = mu(x) dt + sigma(x) dW,
+                                                           dx = mu(x) dt + sigma(x) dW,
                                                                                                                                  
 where mu(x) is the drift function, sigma(x) is the diffusion function, and 𝑑𝑊 represents Brownian noise, which is uncorrelated and Gaussian. The package can reconstruct both high-resolution and low-resolution data. For high-resolution data, the Euler method (termed 'Euler reconstruction') is implemented,
 while for low-resolution data, a more accurate methodology pioneered by Aït-Sahalia is implemented (termed 'Hermite reconstruction'). For details of both methods, please refer to the publication: Aït‐Sahalia, Y. (2002). Maximum likelihood estimation of discretely sampled diffusions: a closed‐form approximation approach. Econometrica, 70(1), 223-262.
