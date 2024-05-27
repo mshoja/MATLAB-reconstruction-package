@@ -30,7 +30,7 @@ Intermediate Learning:
 Run the codes in the folder called 'Examples', which contains 10 case studies for various datasets.
 
 In-Depth Learning:
-Read the tutorial, which is explained in a user-friendly manner and includes 16 case studies for a range of simulated and real datasets.
+Read the tutorial, which contains in-depth but user-friendly expalantion about the modeling details and includes 16 case studies for a range of simulated and real datasets.
 
 Advanced Learning:
 Study the appendix carefully for a more in-depth understanding of the mathematics, and refer to the references provided.
