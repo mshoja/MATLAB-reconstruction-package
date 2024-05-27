@@ -36,6 +36,7 @@ Advanced Learning:
 Study the appendix carefully for a more in-depth understanding of the mathematics, and refer to the references provided.
 
 Usage and Redistribution
+
 Use and redistribution of the codes in this repository are allowed, provided that you cite the following paper:
 
 Babak M. S. Arani, Stephen R. Carpenter, Egbert H. van Nes, Reconstructing Langevin Systems from High and Low-Resolution Time Series using Euler and Hermite Reconstructions.
