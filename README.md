@@ -14,7 +14,9 @@ is used for low-resolution data, and is useful when choosing a model is challeng
 This package includes:
 
 A paper titled 'Reconstructing Langevin Systems from High and Low-Resolution Time Series using Euler and Hermite Reconstructions'
+
 An appendix with solid mathematical descriptions
+
 A user-friendly tutorial
 
 Recommended Learning Strategy
