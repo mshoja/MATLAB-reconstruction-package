@@ -1,14 +1,14 @@
-This repository contains a MATLAB package called the MATLAB Reconstruction Package. This package implements a maximum-likelihood estimation procedure to fit the following stochastic Langevin systems to univariate time series data with different resolutions (this process is known as 'system reconstruction'):
+This repository contains a MATLAB package called the 'MATLAB Reconstruction Package'. This package implements a maximum-likelihood estimation procedure to fit the following stochastic Langevin system to univariate time series data with different resolutions (this process is known as 'system reconstruction'):
 
                                          dx = mu(x) dt + sigma(x) dW,
                                                                                                                                  
 where mu(x) is the drift function, sigma(x) is the diffusion function, and 𝑑𝑊 represents Brownian noise, which is uncorrelated and Gaussian. The package can reconstruct both high-resolution and low-resolution data. For high-resolution data, the Euler method (termed 'Euler reconstruction') is implemented,
-while for low-resolution data, a more accurate methodology pioneered by Aït-Sahalia is implemented (termed 'Hermite reconstruction'). For details of both methods, please refer to the publication: Aït‐Sahalia, Y. (2002). Maximum likelihood estimation of discretely sampled diffusions: a closed‐form approximation approach. Econometrica, 70(1), 223-262.
+while for low-resolution data, a more accurate methodology pioneered by Aït-Sahalia (termed 'Hermite reconstruction') is implemented. For details of both methods, please refer to the publication: Aït‐Sahalia, Y. (2002). Maximum likelihood estimation of discretely sampled diffusions: a closed‐form approximation approach. Econometrica, 70(1), 223-262.
 
-This package supports two different reconstruction procedures: parametric reconstruction and spline reconstruction (for both low and high-resolution data).
+This package supports two different modeling procedures: parametric reconstruction and spline reconstruction (for both low and high-resolution data).
 
 Parametric Reconstruction: The user specifies a parametric model for the drift and diffusion functions (e.g., mu(x) = a*x^3-b*x^2, sigma(x) = c) and the package estimates the model parameters.
-Spline Reconstruction: The user does not need to specify any model. Instead, a coarse mesh across the state space, called a 'knots sequence', should be specified. Spline modeling is more accurate, especially for Hermite reconstruction which
+Spline Reconstruction: The user does not need to specify any model. Instead, a coarse mesh across the state space, called 'knots sequence', should be specified. Spline modeling is more accurate, especially for Hermite reconstruction which
 is used for low-resolution data, and is useful when choosing a model is challenging. 
 
 This package includes:
