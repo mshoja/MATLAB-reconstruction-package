@@ -41,7 +41,6 @@
 %'gradient_fun' handle to gradient function (generated with eulergrad)
 %
 %
-%Author Babak M.S. Ariani (gmail: m.shojaeiarani@gmail.com)
 function result = euler_reconstruction(data, dt, varargin)
     defaults_param = struct('prev', [], 'prev_range', 0.05, 'lb', [], 'ub', [], 'l', [], 'r', [], 'npars', [], ...
         'mu', [], 'sigma', [], 'gradient_fun', [], 'hessian_fun', [], 'solver', 'fmincon', 'reconst_fraction', [],'solveroptions', [], 'useparallel', false, 'zscore', false, 'search_agents', 1, 'maxiter', realmax);
