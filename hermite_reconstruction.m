@@ -50,7 +50,7 @@
 %     Approach”. The Journal of Business 78, 2037-2052.
 %
 %
-%Author Babak M.S. Ariani (gmail: m.shojaeiarani@gmail.com)
+
 function result = hermite_reconstruction(data, dt, varargin)
     defaults_param = struct('prev', [], 'j', 3, 'k', 4, 'l', [], 'r', [], 'refined', true, 'prev_range', 0.05, 'lb', [], 'ub', [], 'npars', [],  ...
         'mu', [], 'sigma', [], 'analytic_diffs', true, 'solver', 'fmincon', 'reconst_fraction', [], 'solveroptions', [], 'useparallel', false, 'search_agents', 5, 'maxiter', realmax);
