@@ -30,11 +30,11 @@
 % reconstruction. Otherwise a 'Hermite' reconstruction must be followed
 
 % We explain these data requirements as well as how to reconstruct a dataset in details across the 5 datasets
-% corresponding with Figures 1-5 in the paper. Two datasets are real datasets from Ecology (Figure 3) and the
-% climate(Figure 5). The details of these datasets are discussed in the paper.
+% corresponding with Figures 1-5 in the paper. Two datasets are real datasets from Ecology (Figure 5) and the
+% climate(Figure 9). The details of these datasets are discussed in the paper.
 
 %%
-% Figure 1 
+% Figure 2 (Analyzing a high-resolution dataset simulated from a linear model)
 
 % This is a simulated dataset. So, we only check the third data requirement in below
 S = load('OUdata1D.mat');data = S.data;  %load the data
@@ -63,7 +63,7 @@ L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + s
 % Left panel
 S = load('OUdata1D.mat');data = S.data;data=data(1:20000);
 t = linspace(0,200,length(data));
-plot(t,data,'-k');
+plot(t,data,'-k');ylim([-inf inf]);
 xlabel('time [a.u]');
 ylabel('state [a.u]');
 title('Ornstein-Uhlenbeck model');
@@ -75,8 +75,69 @@ xplot=linspace(L,R,1000); % a dense mesh across the considered range
 plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par));
 
 %%
+% Figure 3 (Analyzing a small fraction of a high-resolution dataset)
 
-% Figure 2
+% In this example we analyze a random stratified sample (with 10 strata) taken from the big dataset OUdata1D.mat where the sample size
+% includes only 1% of the mother dataset. THis random sample is a Markov sample. Therefore, we do not need to check any data requirement 
+
+%******** A) Fitting a parametric model to a small random fraction of data containing 1% of the entire data points
+% Reconstructing the data
+S = load('OUdata1D.mat');data = S.data;  
+dt = 0.01;  % the time step remains unchanged (this should not be confused with data rarification)
+mu = @(x,par)par(1).*x;sigma = @(x,par)par(2);  % since mu and sigma are function handles this means that we want to consider parametric modeling
+result1 = euler_reconstruction(data, dt, 'mu', mu, 'sigma', sigma, 'gradient_fun',  eulergrad(mu, sigma), ...
+    'reconst_fraction', [10 0.01], 'lb', [-200 eps], 'ub', [200 200],'useparallel',true, 'solver', 'fmincon', 'search_agents', 5);  % 'reconst_fraction', [10 0.01] means that we want to analyze a stratified random sample with 10 strata containing 1% of the mother dataset
+
+%******* B) Fitting a spline model to data
+L=-2;R=1.8; % since we have a  spline’ model it is better to shrink the state space
+data(data<L | data>R) = nan;  %This is VERY important: In spline modeling if you consider a smaller range for your data then you must assign ‘nan’ to those few data points falling outside this range.
+mu=8;sigma=8;  %since mu and sigma are numbers this means that we want to consider spline modeling with 8 knots for mu and 8 knots for sigma
+
+% If you use the following code lines then the package uses 1% of data for spline modeling BUT this
+% fraction will not be the same fraction we used in A
+
+% result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'CC', 'L', ...
+% 'reconst_fraction', [10 0.01], L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon'); % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
+
+% However, to be able to compare parameteric and spline modelings it is better to use EXACTLY the same
+% fraction of data points which was used in A. Bellow, are the needed code lines for this purpose 
+
+sample_pairs = readmatrix('sample_pairs.csv');
+n = length(sample_pairs);n = n+n/2-1;
+data = nan(1, n);
+data(1:3:end) = sample_pairs(1:2:end);
+data(2:3:end) = sample_pairs(2:2:end);
+
+result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'CC', 'L', ...
+L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon'); % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
+
+%********Plotting Figure2
+% Left panel
+S = load('OUdata1D.mat');data = S.data;
+t = linspace(0,10^4,length(data));
+sample_pairs = readmatrix('sample_pairs.csv');
+X0 = sample_pairs(1:2:end);
+X = sample_pairs(2:2:end);
+tolerance = 1e-10;  % to work well, the tollerance should not be so small or so big
+idx_X0 = arrayfun(@(x) find(abs(data - x) < tolerance, 1), X0);
+idx_X = arrayfun(@(x) find(abs(data - x) < tolerance, 1), X);
+t_X0 = t(idx_X0);
+t_X = t(idx_X);
+plot(t,data,'-k');hold on;h1 = plot(t_X0,data(idx_X0), 'or');hold on;h2 = plot(t_X,data(idx_X), 'ob');
+xlim([0 20]);  % the actual range of time is [0 10^4]. For the ease of illustration we just depict the initial part (otherwise, the plot gets messy). You can try any range you wish
+ylim([min(data(1: 2000)) max(data(1: 2000))]);
+xlabel('time [a.u]');
+ylabel('state [a.u]');
+title('Ornstein-Uhlenbeck model');
+legend([h1 h2], {'First elements of data pairs','Second elements of data pairs'});
+
+% Right panel
+mu=@(x,par)par(1).*x;sigma=@(x,par)par(2)+0.*x; %this is true model  
+par=zeros(2,1);par(1)=-1;par(2)=1; %true model parameters
+xplot=linspace(L,R,1000); % a dense mesh across the considered range
+plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par));
+%%
+% Figure 4 (Analyzing a high-resolution dataset simulated from a nonlinear model)
 
 % This is a simulated dataset. So, we only check the third data requirement in below
 S = load('MayData1D.mat');data = S.data;  %load the data
@@ -88,7 +149,7 @@ RT = RelaxationTime(data);
 %******** A) Fitting a parametric model to data
 % NOTE: % Since this model is nonlinear you should run the following code lines a few times (Alternatively, you can consider increasing the
 % 'search_agents' from 5 (default) to a bigger value) to make sure you do not miss the global solution. There is a possibility to get different
-% outcomes each time. But, the solution with the lowest objective function (- sum of log-likelihoods) is the fitest solution. These information apear on the command window  
+% outcomes each time. But, the solution with the lowest objective function (i.e., - sum of log-likelihoods) is the fitest solution. These information apear on the command window  
 
 dt=0.01;  % This is the time step we used tosimulate this dataset (but it is arbitrary)
 mu = @(x,par)par(1).*x.*(1-x./par(2))-par(3).*x.^2./(x.^2+par(4).^2);sigma=@(x,par)par(5);
@@ -100,12 +161,13 @@ dt = 0.01;
 L = min(data);R = max(data);  % here, the entire range of dataset is considered
 mu = 8;sigma = 8; % A spline model with 8 knots for mu and 8 knots for sigma
 result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'CC', 'L', ...
-L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon', 'search_agents', 1);   % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
+L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon', 'search_agents', 5);   % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
 
 %********Plotting Figure2
 % Left panel
-plot(data,'-k');
-xlabel('time');ylabel('state, x');
+t = linspace(0,1000,length(data));
+plot(t, data,'-k');
+xlabel('time [a.u]');ylabel('biomass [a.u]');
 title('Grazing model of May');
 
 % Right panel
@@ -116,8 +178,7 @@ xplot=linspace(L,R,2000);
 plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par));
 
 %%
-
-% Figure 3
+% Figure 5 (Analyzing a high-resolution ecological dataset)
 
 % This is a real dataset (phycocyanin levels in Lake Mendota). So, we should check the three data requirement in below
 data = readmatrix('BGA_stdlevel_2011.csv');data = data(:,3);   % Load the data
@@ -127,7 +188,7 @@ data = readmatrix('BGA_stdlevel_2011.csv');data = data(:,3);   % Load the data
 [~,lagndx] = min([reg(:).BIC]);  % this tells us how many lags we need (lagndx is 8<15. So, considering 15 lags in the previous command was enough. Otherwise, increase it and repeat the process)
 [h, Pvalue,~]=adftest(data,'model','ARD','lags',lagndx);   % h is the test result with a pvalue of Pvalue (here h = 1, so the dataset is stationary)
 
-%2) Test of Markovicty 
+%2) Test of Markovicty
 %NOTE: Here you need the 'Burg' folder. So, you should add its path to your
 %working folder by typing the command 'addpath('The path of the Burg folder')' 
 order = 10;  % Number of autoregressive lags to consider (should be big enough. Continue reading ... you will understand if this lag (10) is enough or not)
@@ -180,15 +241,64 @@ xplot=linspace(L,R,2000);
 plot_results(result,xplot)
 
 %%
+% Figure 6 (Analyzing a low-resolution dataset simulated from a linear model)
 
-% Figure 4
+% This is a simulated dataset. So, we only check the third data requirement in below
+S = load('OUdata1D.mat');data = S.data;  %load the data
+data = data(1:100:end); % Only every 100 data points are considered (this is to generate a dataset which is low-resolution and show that Euler reconstruction does not suffice and a Hermite reconstruction is needed)
+RT = RelaxationTime(data);   % Here, we find that RT = 1.0074 ~ 1 < 50 meaning that this dataset has a the lowest resolution we can stil hope to reconstruct. So, we must follow a Hermite reconstruction reconstruction
+
+% Applying Hermite reconstruction using spline modeling 
+% This has two phases: in the first phase we still follow Euler reconstruction to get a rough result. In the second phase a Hermite
+% reconstruction is performed to improve the Euler reconstruction outcomes
+
+%******** A) Fitting a parametric model to data
+% We first go for Euler reconstruction
+S = load('OUdata1D.mat');
+data = S.data;  %load the data
+data = data(1:100:end); % Only every 100 data points are considered
+dt = 1; % note that the mother dataset has the time step of dt=0.01 which is multiplied %by 100 to match the time scale of this sample
+mu = @(x,par)par(1).*x;sigma = @(x,par)par(2);
+result1 = euler_reconstruction(data, dt, 'mu', mu, 'sigma', sigma, 'gradient_fun',  eulergrad(mu, sigma), 'lb', [-200 eps], 'ub', [200 200],'useparallel',true, 'solver', 'fmincon', 'search_agents', 5);
+
+% Then you get the estimates -0.63555 and 0.65456 for mu and sigma, respectively. Clerarly, these estimates deviate a lot from the true values and this necessitates to use Hermite reconstruction as the second
+
+% Now, we go for Hermite reconstruction
+legpoints = legitimate_points(data, dt, 'prev', result1, 'prev_range', 0.5, 'j', 3, 'k', 9);
+result_her1 = hermite_reconstruction(data, dt, 'prev', legpoints,'solver', 'fmincon');
+
+% Then you get the estimates -1.0092 and 0.99865 for mu and sigma which are wonderful results!
+
+%******** B) Fitting a spline model to data
+% We first go for Euler reconstruction
+
+S = load('OUdata1D.mat');data = S.data;  %load the data
+data = data(1:100:end); % Only every 100 data points are considered
+L = -2.5;R = 2.5;   %Since we have a  spline  model it is better to shrink the state space
+data(data<L | data>R) = nan;  %This is VERY important: In spline modeling if you consider a smaller range for your data then you must assign ‘nan’ to those few data points falling outside this range.
+dt = 1;
+mu = 7; sigma = 7; %In spline modeling mu and sigma are numbers 
+result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'QQ', 'L', L, 'R', R, ..., 
+'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon', 'search_agents', 5);  % Here, 'QQ' means that we want to fit quadratic splines to both drift and diffusion functions. We recommend you not to use the flag 'CC' (which means cubic splines) for Hermite reconstruction
+
+legpoints = legitimate_points(data, dt, 'prev', result2, 'prev_range', 0.5, 'j', 3, 'k', 9);
+result_her2 = hermite_reconstruction(data, dt, 'prev', legpoints, 'solver', 'fmincon', 'search_agents', 5);   % The chosen search agent hear should match that used in the Euler reconstruction
+
+% Left and right panels
+mu = @(x,par)par(1).*x;sigma = @(x,par)par(2)+0.*x; %this is true model  
+par = zeros(2,1);par(1) = -1;par(2) = 1; %true model parameters
+xplot = linspace(L,R,2000); % a dense mesh across the considered range
+plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par)); % Euler & true models 
+plot_results(result_her2,xplot,mu(xplot,par),sigma(xplot,par));%Hermite & true models 
+%%
+% Figure 7 (Analyzing a low-resolution dataset simulated from a nonlinear model)
 
 % This is a simulated dataset. So, we only check the third data requirement in below
 S = load('MayData1D.mat');data = S.data;  %load the data
 data=data(1:300:end);  %We consider every 300-th data point (this is to generate a dataset which is low-resolution and show that Euler reconstruction does not suffice and a Hermite reconstruction is needed)
-RT = RelaxationTime(data);
+RT = RelaxationTime(data)
 
-% Here, we find that RT = 12.7959<50 meaning that this dataset has a low resolution. So, we must follow a Hermite reconstruction reconstruction
+% Here, we find that RT = 12.7959<50 meaning that this dataset has a low resolution. So, we must follow a Hermite reconstruction 
 
 % Applying Hermite reconstruction using spline modeling 
 % This has two phases: in the first phase we still follow Euler reconstruction to get a rough result. In the second phase a Hermite
@@ -217,10 +327,63 @@ plot_results(result,xplot,mu(xplot,par),sigma(xplot,par)); % Euler & true models
 
 % Right panel
 plot_results(result_her,xplot,mu(xplot,par),sigma(xplot,par));
-
 %%
 
-% Figure 5
+% Figure 7 (Analyzing a low-resolution and replicate dataset)
+
+% This is a simulated dataset. So, we only check the third data requirement in below
+S = load('MayData1D_Replicate.mat');
+data = S.data; % replicate data should be supplied as a cell array  (this is dataset has 3 replicates)
+rarified_data = cellfun(@(x) x(end:-30:1), data, 'UniformOutput', false);   % the rarifies sample is made by choosing every 30-th data points
+rarified_data = prepare_replicateData(rarified_data);% to reconstruct replicate data we first need to use this function. The rest of calculations are similar to those for typical datasets
+L = min(rarified_data); % L = min(data) is ok because the density of data near min(data) is high enough
+R = max(rarified_data);R = 6.50;  % The 10 biggest data points are {6.9149,6.6910,6.6103,6.5917,6.5915,6.5668,6.5271,6.4973,6.4756,6.4597}. If you try R = max(data) you can get unreliable results as the density of data mear max(data) is too low. We considered a slightly smaller number. This requires a bit of experimentation
+rarified_data(rarified_data<L | rarified_data>R) = nan;  %This is VERY important: In spline modeling if you consider a smaller range for your data then you must assign rnana to those few data points falling outside this range.
+
+RT = RelaxationTime(rarified_data);
+% Here, we find that RT = 10.0496<50 meaning that this dataset has a low resolution. So, we must follow a Hermite reconstruction 
+
+dt = 3;  % this is the true resolution of replicates (the original data has dt = 0.1, we considered every 30-th data points. So, the rarified sample has dt = 30*0.1 = 3)
+mu = 8; sigma = 1;  % this is an additive model because sigma = 1
+result = euler_reconstruction(rarified_data, dt, 'nKnots', [mu sigma], 'spline', 'QQ', 'L', L, 'R', R, ..., 
+'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'useparallel', true, 'solver', 'fmincon', 'search_agents', 5);
+
+legpoints = legitimate_points(rarified_data, dt, 'prev', result, 'prev_range', 0.5, 'j', 3, 'k', 9);   % Note that for low-resolution data a K value between 6 and 12 is needed (here we used K = 9)
+result_her = hermite_reconstruction(rarified_data, dt, 'prev', legpoints, 'useparallel', true, 'solver',...,
+    'fmincon');
+
+% You might get slightly different outcomes each time for the Hermite reconstruction. Please run this part a few times. Note that the best
+% solution is the one with the smalest objective value (as below):
+
+% Estimated parameters : 
+% 0.20682      0.1962   0.0030841    0.012677    0.093598    0.081107   -0.049113    -0.37251     0.38311
+% - sum of log-likelihoods : 379.4046
+
+
+% Top panel
+S = load('MayData1D_Replicate.mat');
+S = load('MayData1D_Replicate.mat');
+data = S.data;
+rep1_low = data{1}(end:-30:1);rep2_low= data{2}(end:-30:1);rep3_low = data{3}(end:-30:1);
+t1_low = linspace(0, floor(length(rep1_low)*3), length(rep1_low));
+t2_low = linspace(0, floor(length(rep2_low)*3), length(rep2_low));
+t3_low = linspace(0, floor(length(rep3_low)*3), length(rep3_low));
+h1 = plot(t1_low,fliplr(rep1_low'), '.-k', 'MarkerSize', 10);hold on;
+h2 = plot(t2_low,fliplr(rep2_low'), '.-b', 'MarkerSize', 10);hold on;
+h3 = plot(t3_low,fliplr(rep3_low'), '.-', 'MarkerSize', 10, 'color', [0.8500 0.3250 0.0980]);
+xlim([0 750]);
+xlabel('time [a.u]');ylabel('biomass [a.u]');
+title('Grazing model of May');
+
+r=1.01;K=10;g=2.75;a=1.6;s=0.4;  % true parameter values
+par = [r K g a s]; 
+mu = @(x,par)r.*x.*(1-x./K)-g.*x.^2./(x.^2+a.^2);sigma=@(x,par)s;  % true model
+xplot=linspace(L,R,2000);
+plot_results(result,xplot,mu(xplot,par),sigma(xplot,par));hold on;
+plot_results(result_her,xplot,mu(xplot,par),sigma(xplot,par)); 
+%%
+
+% Figure 9
 
 % This is a real dataset (a climate record covering the northern hemisphere climate from 70000 to 20000 years before the present time). So, we must check the three data requirement in below
 data = readmatrix('NGRIP20.csv');   % Load the data
