@@ -29,8 +29,8 @@
 % If data resolution is medium or high then you can follow 'Euler'
 % reconstruction. Otherwise a 'Hermite' reconstruction must be followed
 
-% We explain these data requirements as well as how to reconstruct a dataset in details across the 5 datasets
-% corresponding with Figures 1-5 in the paper. Two datasets are real datasets from Ecology (Figure 5) and the
+% We explain these data requirements as well as how to reconstruct a dataset in details across the 8 datasets
+% corresponding with Figures 2-9 in the paper. Two datasets are real datasets from Ecology (Figure 5) and the
 % climate(Figure 9). The details of these datasets are discussed in the paper.
 
 %%
@@ -59,21 +59,25 @@ mu=8;sigma=8;  %since mu and sigma are numbers this means that we want to consid
 result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'CC', 'L', ...
 L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon'); % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
 
-%********Plotting Figure1
 % Left panel
-S = load('OUdata1D.mat');data = S.data;data=data(1:20000);
-t = linspace(0,200,length(data));
-plot(t,data,'-k');ylim([-inf inf]);
-xlabel('time [a.u]');
-ylabel('state [a.u]');
-title('Ornstein-Uhlenbeck model');
+S = load('OUdata1D.mat');
+data = S.data; 
+data = data(1:20000);
+t = linspace(0, 200, length(data));
+plot(t, data, '-k');
+ylim([-inf inf]);
+xlabel('time [a.u]', 'FontSize', 16); 
+ylabel('state [a.u]', 'FontSize', 16); 
+title('Ornstein-Uhlenbeck model', 'FontSize', 16); 
 
 % Right panel
-mu=@(x,par)par(1).*x;sigma=@(x,par)par(2)+0.*x; %this is true model  
-par=zeros(2,1);par(1)=-1;par(2)=1; %true model parameters
-xplot=linspace(L,R,1000); % a dense mesh across the considered range
-plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par));
-
+mu = @(x, par) par(1).*x; 
+sigma = @(x, par) par(2) + 0.*x; % this is true model  
+par = zeros(2, 1); 
+par(1) = -1; 
+par(2) = 1; % true model parameters
+xplot = linspace(L, R, 1000); % a dense mesh across the considered range
+plot_results(result2, xplot, mu(xplot, par), sigma(xplot, par));
 %%
 % Figure 3 (Analyzing a small fraction of a high-resolution dataset)
 
@@ -163,7 +167,7 @@ mu = 8;sigma = 8; % A spline model with 8 knots for mu and 8 knots for sigma
 result2 = euler_reconstruction(data, dt, 'nKnots', [mu sigma], 'spline', 'CC', 'L', ...
 L, 'R', R, 'lb', [zeros(1, mu) - 10, zeros(1, sigma)+eps], 'ub', zeros(1, mu + sigma) + 10, 'solver', 'fmincon', 'search_agents', 5);   % 'CC' means that we want to consider cubic splines for both drift and diffusion functions
 
-%********Plotting Figure2
+%********Plotting Figure4
 % Left panel
 t = linspace(0,1000,length(data));
 plot(t, data,'-k');
@@ -373,8 +377,9 @@ h2 = plot(t2_low,fliplr(rep2_low'), '.-b', 'MarkerSize', 10);hold on;
 h3 = plot(t3_low,fliplr(rep3_low'), '.-', 'MarkerSize', 10, 'color', [0.8500 0.3250 0.0980]);
 xlim([0 750]);
 xlabel('time [a.u]');ylabel('biomass [a.u]');
-title('Grazing model of May');
+title('A small low-resolution replicate dataset');
 
+% Bottom panels
 r=1.01;K=10;g=2.75;a=1.6;s=0.4;  % true parameter values
 par = [r K g a s]; 
 mu = @(x,par)r.*x.*(1-x./K)-g.*x.^2./(x.^2+a.^2);sigma=@(x,par)s;  % true model
