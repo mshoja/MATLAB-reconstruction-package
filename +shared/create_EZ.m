@@ -97,7 +97,9 @@ function EZ1 = create_EZ(J, K, ndiff_mu, ndiff_sigma, filename, funname)
     [n, d] = numden(EZ);
     EZ = horner(n, Ds0) ./ horner(d, Ds0); %based on previous comment you should avoid this line in case of a possible error message
     I = hasSymType(EZ, 'variable');
-    EZ(~I) = EZ(~I) + 10^(-100) * Ds0; % this is just to turn constant component of ez into a vector by adding an infinitesimal vector
+        if any(~I)
+        EZ(~I) = EZ(~I) + 10^(-100) * Ds0;  % this is just to turn constant component of ez into a vector by adding an infinitesimal vector
+    end
     Dm = [Dm0 Dm];
     Ds = [Ds0 Ds];
     %The reason we SAVE ez as an m-file in bellow is that this way matlab optimizes ez which is very important to reduce computational burden
