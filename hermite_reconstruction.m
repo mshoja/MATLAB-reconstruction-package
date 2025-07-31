@@ -1,6 +1,6 @@
 %hermite_reconstruction - reconstruct Langevin equation using the refined Hermite
 %method (Aït-Sahalia, 2002, Bakshi & Ju 2005). 
-%
+%so
 %
 %usage:
 %res=hermite_reconstruction(data,dt,'name',value,...)
@@ -50,7 +50,7 @@
 %     Approach”. The Journal of Business 78, 2037-2052.
 %
 %
-
+%Author Babak M.S. Ariani (gmail: m.shojaeiarani@gmail.com)
 function result = hermite_reconstruction(data, dt, varargin)
     defaults_param = struct('prev', [], 'j', 3, 'k', 4, 'l', [], 'r', [], 'refined', true, 'prev_range', 0.05, 'lb', [], 'ub', [], 'npars', [],  ...
         'mu', [], 'sigma', [], 'analytic_diffs', true, 'solver', 'fmincon', 'reconst_fraction', [], 'solveroptions', [], 'useparallel', false, 'search_agents', 5, 'maxiter', realmax);
@@ -242,70 +242,34 @@ function result = hermite_reconstruction(data, dt, varargin)
             'mufun', options.mu, 'sigmafun', options.sigma, 'computation_time', tim2, 'knots', [],  ...
             'options', options);
     end
-end
 
-function cost = Hermite_Cost_Spline_SGD(par, X0, X, dt, J, N, EZfun, H, H_coeff, Coeff, mesh_fine, mu_spline, sigma_spline)
-    mu_deriv = mu_spline(par);
-    mu_vals = cell(size(mu_deriv));
-    for i = 1:length(mu_deriv)
-        %run the splines for all derivatives
-        mu_vals{i} = spline_val(mu_deriv{i}, X0);
-    end
-    sigma_deriv = sigma_spline(par);
-    sigma_vals = cell(size(sigma_deriv));
-    for i = 1:length(sigma_deriv)
-        sigma_vals{i} = spline_val(sigma_deriv{i}, X0);
-    end
-    sigma_meshfine = spline_val(sigma_deriv{1}, mesh_fine);
-    sigma_X = spline_val(sigma_deriv{1}, X);
-    %in the EZ functions we now always include dt
-    EZ = EZfun(dt, mu_vals{:}, sigma_vals{:});
-    if all(sigma_meshfine > 0)
-        VAR = EZ(2, :) - EZ(1, :).^2;
-        if min(VAR) > 0
-            rho = VAR.^(-1 ./ 2);
-            z = cumtrapz(mesh_fine, 1 ./ sigma_meshfine);
-            z = @(x)interp1(mesh_fine,z,x);
-            Z = (z(X) - z(X0)) ./ sqrt(dt); %dt=1 is chosen in the command Z=(z(X)-z(X0))./sqrt(dt);
-            Z1 = rho .* (Z - EZ(1, :));
-            EZh = zeros(J, N - 1);
-            EZh(2, :) = 1;
-            for j = 3:J
-                EZh(j, :) = rho.^j .* sum([EZ(j: -1:1, :).' ones(N - 1, 1)] .* Coeff{j}(EZ(1, :).'), 2).';
+    if ~isempty(result.estimated_par)
+        if ~isempty(result.knots)
+            m = numel(result.knots{1});
+            knots_mu = result.knots{1};
+            if isequal(options.spline{1}, 'Q')
+                if m == 1
+                    mu = @(x,par)par(1: m)+zeros(size(x));
+                else
+                    mu = @(x,par)ppval(spline(knots_mu, par(1: m)),x);
+                end
+                result.mufun = mu;
             end
-            eta = zeros(J, N - 1);
-            for j = 3:2:J
-                eta(j, :) = 1 / shared.factorial1(j) .* sum(H_coeff{j} .* EZh(j: -2:1, :));
+            if isequal(options.spline{2}, 'Q')
+                knots_sigma = result.knots{2};
+                if isscalar(result.knots{2})
+                    sigma = @(x,par)par(m+1: end)+zeros(size(x));
+                else
+                    sigma = @(x,par)ppval(spline(knots_sigma, par(m+1: end)),x);
+                end
+                result.sigmafun = sigma;
             end
-            for j = 4:2:J
-                eta(j, :) = 1 / shared.factorial1(j) .* sum(H_coeff{j} .* [EZh(j: -2:1, :); ones(1, N - 1)]);
-            end
-            eta = eta(3:end, :); % We do not need the first 2 rows of eta as they are 0
-
-            A = rho ./ (sqrt(dt) .* sigma_X) .* normpdf(Z1); %dt added here
-            B = [ones(1, N - 1); eta];
-            C = [ones(1, N - 1); H(Z1)];
-            D = sum(B .* C);
-            L = A .* D; % L is the vector of likelihoods
-
-            %The following is a 'death penalty' implementation of the constraint of not geting illegitimate likelihoods happening when parameters are rather 'far' from the optimal parameters
-            if ~isreal(L)
-                cost = realmax;
-            elseif min(L) > 0
-                cost = -sum(log(L), 'omitnan'); % objective function is the negative of sum of log-likelihoods
-            else
-                cost = realmax;
-            end
-        else
-            cost = realmax;
         end
-    else
-        cost = realmax;
     end
 end
 
 function [estimated_par, f_best] = SGD(cost_SGD, data, par0, knots, index_sigma, dt, N, dim, lb, ub, learning_rate, num_epochs, batch_size, opts)
-    estimated_par = par0
+estimated_par = par0;
     for epoch = 1:num_epochs % SGD loop
         shuffled_indices = randperm(N); % Shuffle dataset
         for i = 1:batch_size:N % Iterate over mini-batches
