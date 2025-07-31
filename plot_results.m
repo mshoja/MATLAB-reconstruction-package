@@ -1,5 +1,6 @@
-function plot_results(res, x, y, y2)
+function U_eff = plot_results(res, x, y, y2)
 
+U_eff = [];
 %   struct with fields:
 %
 %        estimated_par: [1.6676 -1.8720 0.6711 0.6360]
@@ -27,7 +28,6 @@ function plot_results(res, x, y, y2)
 %       useparallel: 0
 %     search_agents: 5
 %           maxiter: 1.7977e+308
-
 
 if ~(nargin ==3 && (ischar(y) || issring(y)))
 
@@ -114,7 +114,7 @@ else
     figure
     subplot(3, 1, 1)
     h = yline(0, '-k');hold on;
-    set(get(get(h, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off')
+    set(get(get(h, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
     if ~isempty(res.knots)
         if numel(res.knots{1}) == 1
             plot(x, res.mufun(x, res.estimated_par), '-.b', 'DisplayName', 'constant');
@@ -156,25 +156,19 @@ else
     legend
 
     subplot(3,1,3)
-    A1 = res.mufun(x, res.estimated_par);size(A1)
+    A1 = res.mufun(x, res.estimated_par);
     A2 = res.sigmafun(x, res.estimated_par);
     U = -2 .* cumtrapz(x, A1 ./ A2.^2) + 2 .* log(A2);
-    U = U - min(U) + 0.5;
+    U_eff = U - min(U) + 0.5;
 
     set(get(get(h, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off')
     if ~isempty(res.knots)
-        h1=plot(x, U, '-.b', 'DisplayName', sprintf('''%s'' spline', res.options.spline{2}));hold on;
-        if res.knots{1} == res.knots{2}
-            U1 = @(z)interp1(x,U,z);
+        h1=plot(x, U_eff, '-.b', 'DisplayName', sprintf('''%s'' spline', res.options.spline{2}));hold on;
+        if isequal(res.knots{1},res.knots{2})
+            U1 = @(z)interp1(x,U_eff,z);
             U_knots = U1(res.knots{1});hold on;
             h2=plot(res.knots{2}, U_knots, '*r', 'DisplayName', 'knots');hold on;
-
-            z = [-42.4100  -40.8694  -40.2926];
-            plot(z(1),U1(z(1)),'.k','MarkerSize',20);hold on;
-            plot(z(2),U1(z(2)),'ok','MarkerSize',6);hold on;
-            plot(z(3),U1(z(3)),'.k','MarkerSize',20);hold on;
             xlim([-inf inf]);
-            ylim([0 inf]);%ylim([0 1.5]);
             xlabel('State x');
             ylabel({'Effective potential'; 'U_{eff} (x)'});
         end

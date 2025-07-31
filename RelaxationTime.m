@@ -5,6 +5,7 @@ function R=RelaxationTime(data)
 
 % Broersen, P. M. (2006). Automatic autocorrelation and spectral analysis. Springer Science & Business Media.
 
+% Implemented in Matlab by Babak M.S. Ariani (gmail: m.shojaeiarani@gmail.com)
 
 
 % NOTE1: The typical data (meaning a single dataset) should be supplied as an N*d matrix where d is the spatial (or state) dimension and N is the temporal length. Clearly, N>d almost always. So, we interpret max(size(data)) as the temporal length and main(size(data)) as the state length (numbreer of state variables). If data is a square matrix we consider size(data,1) as the temporal length

@@ -16,7 +16,7 @@ if iscell(data)
         data1{i-m+1}=data{i}(1:L(m));
     end
     data=cell2mat(data1);
-    [out,~]=armasel_s(data,1:p,1,1,[],1,size(data,2),size(data,2));
+    [out,~]=armasel_s(data,1:size(data,1)-1,1,1,[],1,size(data,2),size(data,2));
 else
     data=data(:);
     [out,~,~,~]=armasel(data,1:p,1,1,[]);
