@@ -1,6 +1,6 @@
 %hermite_reconstruction - reconstruct Langevin equation using the refined Hermite
 %method (Aït-Sahalia, 2002, Bakshi & Ju 2005). 
-%so
+%
 %
 %usage:
 %res=hermite_reconstruction(data,dt,'name',value,...)

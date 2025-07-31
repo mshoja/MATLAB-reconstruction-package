@@ -41,6 +41,7 @@
 %'gradient_fun' handle to gradient function (generated with eulergrad)
 %
 %
+%Author Babak M.S. Ariani (gmail: m.shojaeiarani@gmail.com)
 function result = euler_reconstruction(data, dt, varargin)
     defaults_param = struct('prev', [], 'prev_range', 0.05, 'lb', [], 'ub', [], 'l', [], 'r', [], 'npars', [], ...
         'mu', [], 'sigma', [], 'gradient_fun', [], 'hessian_fun', [], 'solver', 'fmincon', 'reconst_fraction', [],'solveroptions', [], 'useparallel', false, 'zscore', false, 'search_agents', 1, 'maxiter', realmax);
@@ -240,6 +241,26 @@ function result = euler_reconstruction(data, dt, varargin)
             costSCS = Create_Euler_Cost_Spline(X0, X, dt, knots, index_mu, spline_mu, 'SCS');
             f_best = costSCS(estimated_par);
             fprintf('f_best (real)= %g\n', f_best);
+        end
+
+        m = options.nknots(1);
+        if isequal(spline_mu, 'Q')
+            if m == 1
+                mu = @(x,par)par(1: m)+zeros(size(x));
+            else
+                knots_mu = knots(1: m);
+                mu = @(x,par)ppval(spline(knots_mu, par(1: m)),x);
+            end
+        end
+
+        if isequal(spline_sigma, 'Q')
+            n = options.nknots(2);
+            if n == 1
+                sigma = @(x,par)par(m+1: end)+zeros(size(x));
+            else
+                knots_sigma = knots(m+1: end);
+                sigma = @(x,par)ppval(spline(knots_sigma, par(m+1: end)),x);
+            end
         end
 
         result = struct('estimated_par', estimated_par, 'negloglik', f_best, 'datarange', [min(data), max(data)], 'dt', dt, ...
