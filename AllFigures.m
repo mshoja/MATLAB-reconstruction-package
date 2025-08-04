@@ -185,7 +185,7 @@ plot_results(result2,xplot,mu(xplot,par),sigma(xplot,par));
 % Figure 5 (Analyzing a high-resolution ecological dataset)
 
 % This is a real dataset (phycocyanin levels in Lake Mendota). So, we should check the three data requirement in below
-data = readmatrix('BGA_stdlevel_2011.csv');data = data(:,3);   % Load the data
+data = readmatrix('BGA_stdlevel_2011.csv');
 
 %1) Test of stationarity (if the test result is 1, as it is, then data are stationary)
 [~,~,~,~,reg] = adftest(data,'model','ARD','lags',0:15);  % the input 0:15 is the number of lags we try in fitting an autoregressive model to data (it should be big enough. See next command). 
@@ -197,7 +197,6 @@ data = readmatrix('BGA_stdlevel_2011.csv');data = data(:,3);   % Load the data
 %working folder by typing the command 'addpath('The path of the Burg folder')' 
 order = 10;  % Number of autoregressive lags to consider (should be big enough. Continue reading ... you will understand if this lag (10) is enough or not)
 AR = ME_TimeScale(data,order);
-
 % Here you get the following AR vector
 %1.0000   -0.6261   -0.2177   -0.0840   -0.0339   -0.0120   -0.0068   -0.0009   -0.0080    0.0005   -0.0089
 
