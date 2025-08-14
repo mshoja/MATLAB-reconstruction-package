@@ -46,9 +46,9 @@ ARANI, M. S., CARPENTER S.R. & VAN NES, E. H. 2024. Reconstructing Langevin Syst
 
 If you use this software, please cite the repository and the related paper:
 
-Arani, B. M., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671) (specific version)
+Arani, BMS., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671) (specific version)
 
-Arani, B. M., et al. (2025). "Reconstruction Paper Title." Accepted for publication in *Methods in Ecology and Evolution*.
+Arani, BMS., et al. (2025). "Reconstruction Paper Title." Accepted for publication in *Methods in Ecology and Evolution*.
 
 You can also cite all versions of this repository using the concept DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
 
@@ -56,7 +56,7 @@ You can also cite all versions of this repository using the concept DOI: [10.528
 
 ```bibtex
 @software{Arani2025,
-  author = {Arani, B. M., van Nes, E. H, & Carpenter, S. R},
+  author = {Arani, BMS., van Nes, E. H, & Carpenter, S. R},
   title = {MATLAB Reconstruction Package},
   year = {2025},
   publisher = {Zenodo},
@@ -65,7 +65,7 @@ You can also cite all versions of this repository using the concept DOI: [10.528
 }
 
 @article{Arani2025Paper,
-  author = {Arani, B. M., van Nes, E. H, & Carpenter, S. R},
+  author = {Arani, BMS, van Nes, E. H, & Carpenter, S. R},
   title = {Reconstructing Langevin systems from high and low-resolution time series using Euler and Hermite reconstructions},
   journal = {Methods in Ecology and Evolution},
   year = {2025},
