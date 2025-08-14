@@ -55,8 +55,8 @@ You can also cite all versions of this repository using the concept DOI: [10.528
 ### BibTeX
 
 ```bibtex
-@software{Shoja2025,
-  author = {Shoja, M. and others},
+@software{Arani2025,
+  author = {Arani, B. M., van Nes, E. H, & Carpenter, S. R},
   title = {MATLAB Reconstruction Package},
   year = {2025},
   publisher = {Zenodo},
@@ -64,9 +64,9 @@ You can also cite all versions of this repository using the concept DOI: [10.528
   url = {https://doi.org/10.5281/zenodo.16876671}
 }
 
-@article{Shoja2025Paper,
-  author = {Shoja, M. and others},
-  title = {Reconstruction Paper Title},
+@article{Arani2025Paper,
+  author = {Arani, B. M., van Nes, E. H, & Carpenter, S. R},
+  title = {Reconstructing Langevin systems from high and low-resolution time series using Euler and Hermite reconstructions},
   journal = {Methods in Ecology and Evolution},
   year = {2025},
   note = {Accepted for publication}
