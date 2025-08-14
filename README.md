@@ -48,7 +48,7 @@ If you use this software, please cite the repository and the related paper:
 
 Arani, BMS., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671) (specific version)
 
-Arani, BMS., et al. (2025). "Reconstruction Paper Title." Accepted for publication in *Methods in Ecology and Evolution*.
+Arani, BMS., et al. (2025). "Reconstructing Langevin systems from high and low-resolution time series using Euler and Hermite reconstructions." Accepted for publication in *Methods in Ecology and Evolution*.
 
 You can also cite all versions of this repository using the concept DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
 
