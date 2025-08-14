@@ -41,7 +41,8 @@ Use and redistribution of the codes in this repository are allowed, provided tha
 
 ARANI, M. S., CARPENTER S.R. & VAN NES, E. H. 2024. Reconstructing Langevin Systems from High and Low-Resolution Time Series using Euler and Hermite Reconstructions.
 
-Cite this repository
+Citing this repository
+
 If you use this software, please cite:
 
 Arani, B. M., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671)
