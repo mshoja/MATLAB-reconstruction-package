@@ -41,14 +41,34 @@ Use and redistribution of the codes in this repository are allowed, provided tha
 
 ARANI, M. S., CARPENTER S.R. & VAN NES, E. H. 2024. Reconstructing Langevin Systems from High and Low-Resolution Time Series using Euler and Hermite Reconstructions.
 
-Citing this repository
 
-If you use this software, please cite:
+ ## Cite this repository
 
-Arani, B. M., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671)
-You can also cite all versions using the concept DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
+If you use this software, please cite the repository and the related paper:
 
+Arani, B. M., et al. (2025). *MATLAB Reconstruction Package*. Zenodo. DOI: [10.5281/zenodo.16876671](https://doi.org/10.5281/zenodo.16876671) (specific version)
 
+Arani, B. M., et al. (2025). "Reconstruction Paper Title." Accepted for publication in *Methods in Ecology and Evolution*.
 
+You can also cite all versions of this repository using the concept DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
 
- 
+### BibTeX
+
+```bibtex
+@software{Shoja2025,
+  author = {Shoja, M. and others},
+  title = {MATLAB Reconstruction Package},
+  year = {2025},
+  publisher = {Zenodo},
+  doi = {10.5281/zenodo.16876671},
+  url = {https://doi.org/10.5281/zenodo.16876671}
+}
+
+@article{Shoja2025Paper,
+  author = {Shoja, M. and others},
+  title = {Reconstruction Paper Title},
+  journal = {Methods in Ecology and Evolution},
+  year = {2025},
+  note = {Accepted for publication}
+}
+
