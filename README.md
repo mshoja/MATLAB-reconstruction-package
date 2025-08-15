@@ -48,9 +48,6 @@ You can also cite all versions of this repository using the concept DOI: [10.528
 
 ## 📄 Cite this repository
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16876671.svg)](https://doi.org/10.5281/zenodo.16876671)  
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16876670.svg)](https://doi.org/10.5281/zenodo.16876670)
-
 If you use this software, please cite the repository and the related paper:
 
 **Repository citation (specific version):**  
@@ -63,7 +60,6 @@ Accepted for publication in *Methods in Ecology and Evolution*.
 
 **Concept DOI (all versions):**  
 DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
-
 
 
 ### BibTeX
