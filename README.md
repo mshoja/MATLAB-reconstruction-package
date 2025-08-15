@@ -35,7 +35,7 @@ Usage and Redistribution
 
 Use and redistribution of the codes in this repository are allowed, provided that you cite the paper and its accompanying package.
 
- ## Cite this repository
+ ### Cite this repository
 
 If you use this software, please cite the repository and the related paper:
 
