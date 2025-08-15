@@ -60,7 +60,7 @@ Arani, BMS., et al. (2025). "Reconstructing Langevin systems from high and low-r
 Accepted for publication in *Methods in Ecology and Evolution*.
 
 **Concept DOI (all versions):**  
-DOI: [10.5281/zenodo.16876670](https://doi.org/10.5281/zenodo.16876670)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16876670.svg)](https://doi.org/10.5281/zenodo.16876670)
 
 
 ### BibTeX
