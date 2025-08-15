@@ -15,7 +15,7 @@ An appendix with solid mathematical descriptions
 
 A user-friendly tutorial
 
-Recommended Learning Strategy
+# Recommended Learning Strategy
 
 Depending on your needs, follow these steps to learn how to use the package:
 
