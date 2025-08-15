@@ -9,6 +9,7 @@ This package supports two different modeling procedures: parametric reconstructi
 
 Parametric Reconstruction: 
 The user specifies a parametric model for the drift and diffusion functions (e.g., mu(x) = a*x^3-b*x^2, sigma(x) = c) and the package estimates the model parameters.
+
 Spline Reconstruction: 
 The user does not need to specify any model. Instead, a coarse mesh across the state space, called 'knots sequence', should be specified. Spline modeling is more accurate, especially for Hermite reconstruction which
 is used for low-resolution data, and is useful when choosing a model is challenging. 
