@@ -52,7 +52,7 @@ If you use this software, please cite the repository and the related paper:
 
 **Repository citation (specific version):**  
 Arani, BMS., et al. (2025). *MATLAB Reconstruction Package*. Zenodo.  
-DOI: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16876671.svg)](https://doi.org/10.5281/zenodo.16876671)  
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16876671.svg)](https://doi.org/10.5281/zenodo.16876671)  
 
 
 **Related paper citation:**  
